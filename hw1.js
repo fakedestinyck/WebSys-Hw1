@@ -141,6 +141,8 @@
             if ( 1 === 0) {
                 window.alert("Please start the game first");
             } else {
+                alert("test");
+             window.alert("testw");
                 // TODO: stop timer
                 var thisScore = calcScore();
                 currentScoreLabel.text("Score on Last Color: "+thisScore);
