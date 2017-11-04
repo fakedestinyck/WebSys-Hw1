@@ -6,12 +6,15 @@
         
         var currentRound = 1;
         var totalScore = 0;
+        var turns = 10;
+        var difficulty = 5;
 
         var red;
         var green;
         var blue;
 
-        var gotitButton = this.find('#startButton');
+        var startButton = this.find('#startButton');
+        var gotitButton = this.find('#gotitButton');
         var totalScoreLabel = this.find('#score h3:nth-child(1)');
         var currentScoreLabel = this.find('#score h3:nth-child(2)');
  
@@ -22,7 +25,6 @@
         }, options );
  
         var createNewColor = function() {
-            // this function is written by Osama
             red = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
             blue = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
             green = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
@@ -59,8 +61,6 @@
             myFiller.fillStyle = userColor;
             myFiller.fillRect(0,0,100,100);
         };
-        
-        createNewColor();
 
         var redSlider = document.getElementById("redSlider");
         var redOutput = document.getElementById("redValue");
@@ -133,6 +133,17 @@
             return Math.round(rawScore*100)/100;
         };
         
+
+        startButton.click(function() {
+            turns = document.getElementById('turnInput').value;
+            if (isNaN(turns)) {
+                turns = 5;
+            }
+            turns = Math.floor(turns);
+            createNewColor();
+            // TODO: Get selected difficulty
+            // TODO: Start Timer 
+        });
         
         // implement gotIt! Button
 
@@ -169,6 +180,8 @@ $(document).ready(function() {
  	$("#hexGame").hexed();
 
 });
+
+// Below is javascript for the drop down menu
 
 /* When the user clicks on the button, 
 toggle between hiding and showing the dropdown content */
