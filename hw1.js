@@ -6,12 +6,13 @@
         
         var currentRound = 1;
         var totalScore = 0;
-        var turns = 10;
-        var difficulty = 5;
 
         var red;
         var green;
         var blue;
+        
+        var starttime;
+        var endtime;
 
         var startButton = this.find('#startButton');
         var gotitButton = this.find('#gotitButton');
@@ -120,26 +121,28 @@
             // alert("blue"+parseInt(blue,16));
             // alert(blueSlider.value);
             // alert(percentOffBlue);
-            var timeTaken = 0;
+            var timeTaken = endtime-starttime;
             var rawScore = ((15-settings.difficulty-percentOff)/(15-settings.difficulty)) * (15000-timeTaken);
             // alert(15-settings.difficulty-percentOff);
-            if (rawScore < 0) {
+            if (rawScore < 0 || 15-settings.difficulty-percentOff < 0 || 15000-timeTaken < 0) {
                 rawScore = 0;
             }
+            rawScore = Math.round(rawScore*100)/100;
             var alertString = "percent off: " + percentOff + "\n";
             alertString += "milliseconds taken: " + timeTaken + "\n";
             alertString += "score: " + rawScore;
             alert(alertString);
-            return Math.round(rawScore*100)/100;
+            return rawScore;
         };
         
 
         startButton.click(function() {
-            turns = document.getElementById('turnInput').value;
-            if (isNaN(turns)) {
-                turns = 5;
+            starttime = new Date().getTime();
+            settings.turns = document.getElementById('turnInput').value;
+            if (isNaN(settings.turns)) {
+                settings.turns = 5;
             }
-            turns = Math.floor(turns);
+            settings.turns = Math.floor(settings.turns);
             createNewColor();
             // TODO: Get selected difficulty
             // TODO: Start Timer 
@@ -153,6 +156,7 @@
                 window.alert("Please start the game first");
             } else {
                 // TODO: stop timer
+                endtime = new Date().getTime();
                 var thisScore = calcScore();
                 currentScoreLabel.text("Score on Last Color: "+thisScore);
                 totalScore += thisScore;
@@ -161,6 +165,7 @@
                     alert("Game over!\nYour total score: "+ totalScore);
                 } else {
                     // TODO: restart timer
+                    starttime = new Date().getTime();
                     currentRound += 1;
                     createNewColor();
                 }
