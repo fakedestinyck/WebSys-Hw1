@@ -139,13 +139,13 @@
         startButton.click(function() {
             starttime = new Date().getTime();
             settings.turns = document.getElementById('turnInput').value;
-            if (isNaN(settings.turns)) {
+            if (settings.turns == "" || isNaN(settings.turns)) {
                 settings.turns = 5;
             }
             settings.turns = Math.floor(settings.turns);
             createNewColor();
             // TODO: Get selected difficulty
-            // TODO: Start Timer 
+            // TODO: Start Timer
         });
         
         // implement gotIt! Button
