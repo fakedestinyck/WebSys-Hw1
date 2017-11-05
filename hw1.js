@@ -30,7 +30,7 @@
             blue = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
             green = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
     
-            var color =  '#' + red + blue + green;
+            var color =  '#' + red + green + blue;
     
             var targetColor = document.getElementById("targetColorImage");
             var targetFiller = targetColor.getContext("2d");
