@@ -117,15 +117,6 @@
             var percentOffGreen = Math.abs(parseInt(green,16)-greenSlider.value)/255*100;
             var percentOffBlue = Math.abs(parseInt(blue,16)-blueSlider.value)/255*100;
             var percentOff = (percentOffRed+percentOffGreen+percentOffBlue)/3;
-            // alert("red"+parseInt(red,16));
-            // alert(redSlider.value);
-            // alert(percentOffRed);
-            // alert("green"+parseInt(green,16));
-            // alert(greenSlider.value);
-            // alert(percentOffGreen);
-            // alert("blue"+parseInt(blue,16));
-            // alert(blueSlider.value);
-            // alert(percentOffBlue);
             var timeTaken = endtime-starttime;
             var rawScore = ((15-settings.difficulty-percentOff)/(15-settings.difficulty)) * (15000-timeTaken);
             // alert(15-settings.difficulty-percentOff);
