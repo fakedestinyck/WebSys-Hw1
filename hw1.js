@@ -15,6 +15,9 @@
         var endtime;
         var gameStarted = false;
 
+        var targetColor = document.getElementById("targetColorImage");
+        var targetFiller = targetColor.getContext("2d");
+
         var startButton = this.find('#startButton');
         var gotitButton = this.find('#gotitButton');
         var totalScoreLabel = this.find('#score h3:nth-child(1)');
@@ -32,19 +35,19 @@
  
         var createNewColor = function() {
             red = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
-            blue = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
             green = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+            blue = "00".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
     
             var color =  '#' + red + green + blue;
     
-            var targetColor = document.getElementById("targetColorImage");
-            var targetFiller = targetColor.getContext("2d");
+            
             targetFiller.fillStyle = color;
             targetFiller.fillRect(0,0,100,100);
         };
         
         
         var myUpdate = function(){
+            // updates the color of the user input color box
 
             var rgbToHex = function (rgb) { 
                 var hex = Number(rgb).toString(16);
@@ -68,49 +71,73 @@
             myFiller.fillRect(0,0,100,100);
         };
 
+        // variables for sliders and input boxes for the red, green, blue input
         var redSlider = document.getElementById("redSlider");
-        var redOutput = document.getElementById("redValue");
-        redOutput.innerHTML = redSlider.value;
+        var redBox = document.getElementById("redBox");
+        redSlider.value = redBox.value;
         
         var greenSlider = document.getElementById("greenSlider");
-        var greenOutput = document.getElementById("greenValue");
-        greenOutput.innerHTML = greenSlider.value;
+        var greenBox = document.getElementById("greenBox");
+        greenSlider.value = greenBox.value;
         
         var blueSlider = document.getElementById("blueSlider");
-        var blueOutput = document.getElementById("blueValue");
-        blueOutput.innerHTML = blueSlider.value;
+        var blueBox = document.getElementById("blueBox");
+        blueSlider.value = blueBox.value;
         
         
-        var redInput = redOutput.innerHTML;
-        var greenInput = greenOutput.innerHTML;
-        var blueInput = blueOutput.innerHTML;
+        var redInput = 0;
+        var greenInput = 0;
+        var blueInput = 0;
         
         myUpdate();
         
         redSlider.oninput = function() {
-            redOutput.innerHTML = this.value;
+            redBox.value = this.value;
             redInput = this.value;
-            greenInput = greenSlider.value;
-            blueInput = blueSlider.value;
+            myUpdate();
+        };
+        
+        redBox.oninput = function() {
+            if (this.value < 0)
+                this.value = 0;
+            if (this.value > 255)
+                this.value = 255;
+            redSlider.value = this.value;
+            redInput = this.value;
             myUpdate();
         };
         
         greenSlider.oninput = function() {
-            greenOutput.innerHTML = this.value;
-            redInput = redSlider.value;
+            greenBox.value = this.value;
             greenInput = this.value;
-            blueInput = blueSlider.value;
+            myUpdate();
+        };
+        
+        greenBox.oninput = function() {
+            if (this.value < 0)
+                this.value = 0;
+            if (this.value > 255)
+                this.value = 255;
+            greenSlider.value = this.value;
+            greenInput = this.value;
             myUpdate();
         };
 
         blueSlider.oninput = function() {
-            blueOutput.innerHTML = this.value;
-            redInput = redSlider.value;
-            greenInput = greenSlider.value;
+            blueBox.value = this.value;
             blueInput = this.value;
             myUpdate();
         };
-        // this.html("difficulty: " + settings.difficulty + " random color: " + color);
+        
+        blueBox.oninput = function() {
+            if (this.value < 0)
+                this.value = 0;
+            if (this.value > 255)
+                this.value = 255;
+            blueSlider.value = this.value;
+            blueInput = this.value;
+            myUpdate();
+        };
         
         var calcScore = function () {
             var percentOffRed = Math.abs(parseInt(red,16)-redSlider.value)/255*100;
@@ -119,7 +146,6 @@
             var percentOff = (percentOffRed+percentOffGreen+percentOffBlue)/3;
             var timeTaken = endtime-starttime;
             var rawScore = ((15-settings.difficulty-percentOff)/(15-settings.difficulty)) * (15000-timeTaken);
-            // alert(15-settings.difficulty-percentOff);
             if (rawScore < 0 || 15-settings.difficulty-percentOff < 0 || 15000-timeTaken < 0) {
                 rawScore = 0;
             }
@@ -136,26 +162,27 @@
             if ( !gameStarted ) {
                 starttime = new Date().getTime();
                 settings.turns = document.getElementById('turnInput').value;
-                if (settings.turns === "" || isNaN(settings.turns)) {
-                    settings.turns = 5;
+                if (settings.turns == "" || isNaN(settings.turns) || settings.turns <= 0) {
+                    // if turn value is invalid turns is put back to 10
+                    settings.turns = 10;
                 }
                 settings.turns = Math.floor(settings.turns);
+                settings.difficulty = document.getElementById('difficultySelector').value;
                 createNewColor();
                 gameStarted = true;
-                // TODO: Get selected difficulty
+                totalScore = 0; // reset total score
+                currentRound = 1; // reset current round to 1
+                
             } else {
                 alert('Game already started!');
             }
         });
-        
-        // implement gotIt! Button
 
         gotitButton.click(function () {
            // if the timer isn't start, make an alert
             if ( !gameStarted ) {
                 window.alert("Please start the game first");
             } else {
-                // TODO: stop timer
                 endtime = new Date().getTime();
                 var thisScore = calcScore();
                 currentScoreLabel.text("Score on Last Color: "+thisScore);
@@ -164,7 +191,6 @@
                 if (currentRound === settings.turns) {
                     gameStarted = false;
                     alert("Game over!\nYour total score: "+ totalScore);
-                    currentRound = 1;
                     highScoreForm.show();
                     userNameInput.focus();
                 } else {
@@ -172,6 +198,17 @@
                     currentRound += 1;
                     createNewColor();
                 }
+                // reset selectors...
+                redSlider.value = 0;
+                greenSlider.value = 0;
+                blueSlider.value = 0;
+                redInput = 0;
+                greenInput = 0;
+                blueInput = 0;
+                redBox.value = 0;
+                greenBox.value = 0;
+                blueBox.value = 0;
+                myUpdate();
             }
         });
         
@@ -196,7 +233,9 @@
             }
             localStorage.setItem('highScore', JSON.stringify(retrievedHighscore));
             highScoreForm.hide();
-            totalScore = 0; // reset total score
+            // reset image color
+            targetFiller.fillStyle = 'white';
+            targetFiller.fillRect(0,0,100,100);
         });
         
         
@@ -212,26 +251,3 @@ $(document).ready(function() {
  	$("#hexGame").hexed();
 
 });
-
-// Below is javascript for the drop down menu
-
-/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-}
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}

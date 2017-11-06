@@ -8,44 +8,51 @@
 	<script type="text/javascript", src = hw1.js></script>
 	<body>
 		<h1>Hexed! - A jQuery Game</h1>
-		<h2>Your goal is to guess the RGB values of the swatch on the left using the sliders and the swatch on the right.</h2>
+		<h2>Your goal is to guess the RGB values of the swatch on the left using the sliders and the swatch on the left.</h2>
 		<h2>Use the sliders or the input boxes to adjust the RGB values of the swatch on the right.</h2>
 		<h2>Press the "Got it!" button when you think you have the correct answer.</h2>
-		<h2>You have a maximum of '10' turns.</h2>
+		<h2>You have a maximum of '10' turns by default.</h2>
 		
 		<div id ="hexGame">
-			<div id = "difficultyLabel">Difficulty: 
-  				<div class="dropdown">
-				<button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  					<div id="myDropdown" class="dropdown-content">
-    					<a href="#home">Home</a>
-    					<a href="#about">About</a>
-    					<a href="#contact">Contact</a>
-  					</div>
-				</div>
-			</div> 
-			
-			<div id = "difficultySelector"></div>
+			<div id = "difficulty">
+				Difficulty:
+				<select id = "difficultySelector" name="difficutySelector">
+					<option value=5>5 (default)</option>
+    				<option value=0>0</option>
+    				<option value=1>1</option>
+    				<option value=2>2</option>
+    				<option value=3>3</option>
+    				<option value=4>4</option>
+    				<option value=5>5</option>
+    				<option value=6>6</option>
+    				<option value=7>7</option>
+    				<option value=8>8</option>
+    				<option value=9>9</option>
+    				<option value=10>10</option>
+  				</select>
+			</div>
 
 			<div id = "turns">Turns: 
-				<input id = "turnInput" type="text" name="turns"></input>
+				<input id ="turnInput" onfocus="if(this.value=='10') {this.value='';}" type="text" name="turns" value="10"></input>
 			</div>
 			
-			<div id = "totalRoundsLabel">Total Rounds:</div>
 			<input type="button" id="startButton" name="startButton" value="Start Game"></input>
 		
 			<div id = "targetColor">
-				<canvas id="targetColorImage" width="100" height="100" style="border:1px solid #d3d3d3;">
+				<canvas id="targetColorImage" width="100" height="100" style="border:2px solid #d3d3d3;">
 			</div>
 			<!-- targetColorImage - color gets filled in here -->
 			<div id = "myColor">
-				<canvas id="myColorImage" width="100" height="100" style="border:1px solid #d3d3d3;">
+				<canvas id="myColorImage" width="100" height="100" style="border:2px solid #d3d3d3;">
 			</div>
 		
 			<div id = "sliders">
-				<p>Red: </p><input type="range" min="0" max="255" value="0" class="slider" id="redSlider"><p>Value: <span id="redValue"></span></p>
-				<p>Green: </p><input type="range" min="0" max="255" value="0" class="slider" id="greenSlider"><p>Value: <span id="greenValue"></span></p>
-				<p>Blue: </p><input type="range" min="0" max="255" value="0" class="slider" id="blueSlider"><p>Value: <span id="blueValue"></span></p>
+				<p>Red: </p><input type="range" min="0" max="255" value="0" class="slider redSlider" id="redSlider">
+				<p>Value: <input id = "redBox" type="text" name="redBox" value = 0></input></p>
+				<p>Green: </p><input type="range" min="0" max="255" value="0" class="slider greenSlider" id="greenSlider">
+				<p>Value: <input id = "greenBox" type="text" name="greenBox" value = 0></input></p>
+				<p>Blue: </p><input type="range" min="0" max="255" value="0" class="slider blueSlider" id="blueSlider">
+				<p>Value: <input id = "blueBox" type="text" name="blueBox" value = 0></input></p>
 			</div>
 			
 			<input type="button" id="gotitButton" name="gotitButton" value="Got it!"></input>
@@ -64,10 +71,7 @@
 					<input type="text" id="playerName"/>
 					<p id="submitButton">Submit</p>
 				</div>
-
 			</div>
-			
 		</div>
-		
 	</body>
 </html>
